@@ -23,8 +23,26 @@ public class MyLinkedList implements MyListInterface {
         return myLinkedList;
     }
 
+    public MyLinkedList() {
+    }
+
+    private MyLinkedList(int value) {
+        this.value = value;
+    }
+
     @Override
     public void add(int index, int value) {
+        if (checkIndex(index)) {
+            MyLinkedList element = getElement(index - 1);
+            MyLinkedList nextElement = getElement(index);
+            MyLinkedList addingElement = new MyLinkedList(value);
+            addingElement.next = nextElement;
+            element.next = addingElement;
+        }
+    }
+
+    private boolean checkIndex(int index) {
+        return index >= 0 && index < getSize();
     }
 
     @Override
@@ -39,6 +57,9 @@ public class MyLinkedList implements MyListInterface {
 
     private MyLinkedList getElement(int index) {
         MyLinkedList myLinkedList = this;
+        if (index < -1) {
+            return null;
+        }
         for (int i = 0; i <= index; i++) {
             if (myLinkedList.next == null) {
                 return null;
@@ -50,17 +71,24 @@ public class MyLinkedList implements MyListInterface {
 
     @Override
     public void put(int index, int value) {
-
+        MyLinkedList element = getElement(index);
+        if (element != null) {
+            element.value = value;
+        }
     }
 
     @Override
     public void addAll(MyListInterface myList) {
-
+        for (int i = 0; i < myList.getSize(); i++) {
+            this.add(myList.get(i));
+        }
     }
 
     @Override
     public void addAll(int index, MyListInterface myList) {
-
+        for (int i = 0; i < myList.getSize(); i++) {
+            this.add(index + i, myList.get(i));
+        }
     }
 
     @Override
@@ -76,7 +104,11 @@ public class MyLinkedList implements MyListInterface {
 
     @Override
     public MyListInterface clone() {
-        return null;
+        MyLinkedList myLinkedList = new MyLinkedList();
+        for (int i = 0; i < this.getSize(); i++) {
+            myLinkedList.add(this.get(i));
+        }
+        return myLinkedList;
     }
 
     @Override
